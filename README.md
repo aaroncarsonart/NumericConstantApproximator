@@ -114,19 +114,20 @@ VIETE           10 2000 --print_steps --compare_values --estimate_memory_usage  
 WALLIS          10 2000 --print_steps --compare_values --estimate_memory_usage     0.017 seconds      1.647 KB
 CHUDNOVSKY      10 2000 --print_steps --compare_values --estimate_memory_usage     0.133 seconds     13.305 KB
 BRENT_SALAMIN   10 2000 --print_steps --compare_values --estimate_memory_usage     0.331 seconds     11.368 KB
-
-ITERATIONS GREGORY_LEIBNIZ NILAKANTHA NEWTON VIETE WALLIS CHUDNOVSKY BRENT_SALAMIN 
-         1               0          2      1     0      0         14             0 
-         2               1          2      3     1      0         28             3 
-         3               0          3      3     2      0         42             8 
-         4               1          2      4     2      0         56            19 
-         5               0          3      4     3      1         70            41 
-         6               1          3      6     4      1         85            84 
-         7               1          3      6     5      1         99           171 
-         8               1          4      7     5      1        113           345 
-         9               1          4      8     5      1        127           694 
-        10               1          4      9     6      1        142          1392 
 ```
+
+| ITERATIONS | GREGORY_LEIBNIZ | NILAKANTHA | NEWTON | VIETE | WALLIS | CHUDNOVSKY | BRENT_SALAMIN |
+| ---------- | --------------- | ---------- | ------ | ----- | ------ | ---------- | ------------- |
+|          1 |               0 |          2 |      1 |     0 |      0 |         14 |             0 |
+|          2 |               1 |          2 |      3 |     1 |      0 |         28 |             3 |
+|          3 |               0 |          3 |      3 |     2 |      0 |         42 |             8 |
+|          4 |               1 |          2 |      4 |     2 |      0 |         56 |            19 |
+|          5 |               0 |          3 |      4 |     3 |      1 |         70 |            41 |
+|          6 |               1 |          3 |      6 |     4 |      1 |         85 |            84 |
+|          7 |               1 |          3 |      6 |     5 |      1 |         99 |           171 |
+|          8 |               1 |          4 |      7 |     5 |      1 |        113 |           345 |
+|          9 |               1 |          4 |      8 |     5 |      1 |        127 |           694 |
+|         10 |               1 |          4 |      9 |     6 |      1 |        142 |          1392 |
 
 [1]:https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80
 [2]:https://en.wikipedia.org/wiki/Pi#Infinite_series
