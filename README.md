@@ -89,7 +89,7 @@ java PiAlgorithmExaminer <algorithms> <iterations> <precision> [options]
 #### Options:
 ```bash
 --skip_tests (-s)  # Skip running the tests (only use to re-analyze already generated output data).
---print_table (-p) # Print the analysis as a table (defaults to printing results in a "key: value" format, which is more useful for large datasets).
+--print_table (-p) # Print the analysis as a table (defaults to printing results in a "key:value" format, which is more useful for large datasets).
 ```
 
 #### Examples:
