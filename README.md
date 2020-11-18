@@ -1,6 +1,6 @@
 # NumericConstantApproximator
-Approximate numeric constants such as [Pi][8] and [Phi][9] to arbitrary precision using java's
-[BigDecimal][11] class (and analyze the results).
+Approximate numeric constants such as [Pi (3.1415926...)][8] and [Phi (1.6180339...)][9] to
+arbitrary precision using java's [BigDecimal][11] class (and analyze the results).
 
 ### Compile
 ```
@@ -18,26 +18,28 @@ java ComputePhi <first-term> <second-term> <iterations> <precision> [options]
 ```
 
 #### Options:
-```
-# TODO coming soon
+```bash
+--print_steps (-p)      # Print approximation for each iteration of algorithm.
+--compare_values (-c)   # Compare sequential iterations' results, and stop iterating early if they are equal.
 ```
 
 #### Examples:
 ```bash
-# the fibonacci sequence
+# The Fibonacci sequence
 java ComputePhi 1 1 10 10
 
-# the lucas numbers
-java ComputePhi 2 1 10 10
+# The Lucas numbers (printing each step)
+java ComputePhi 2 1 10 10 -p
 
-# go wild if you want to
-java ComputePhi 23 9001 200 1000
+# Go wild if you want to!
+java ComputePhi 23 9001 200 1000 --print_steps
+java ComputePhi 314 159 200 20000 --compare_values
 ```
 
 ## 2. ComputePi
 [ComputePi](ComputePi.java) demonstrates 7 different algorithms for approximating [Pi][8].
-The result is then compared to a precomputed file of one million digits (sourced from
-[here][10]) to determine accuracy.
+The result is then compared to a [precomputed file](pi1000000.txt) of one million digits
+of Pi (sourced from [here][10]) to determine accuracy.
 
 #### Usage:
 ```
@@ -58,7 +60,10 @@ java ComputePi <algorithm> <iterations> <precision> [options]
 
 #### Options:
 ```
-# TODO coming soon
+--all_digits (-a)       # Print all digits (default only prints accurate digits).
+--print_steps (-p)      # Print approximation for each iteration of algorithm.
+--compare_values (-c)   # Compare sequential iterations' results, and stop iterating early if they are equal.
+--estimate_memory_usage # Print an estimate of memory usage.
 ```
 
 #### Examples:
@@ -70,8 +75,9 @@ java ComputePi CHUDNOVSKY   10 100 --compare_values --estimate_memory_usage
 
 ## 3. PiAlgorithmExaminer
 [PiAlgorithmExaminer](PiAlgorithmExaminer.java) compares the approximations, runtimes, and memory 
-usage of the algorithms implemented in [ComputePi](ComputePi.java) iteration-by-iteration, and
-prints the results to a table.
+usage of the algorithms implemented in [ComputePi](ComputePi.java) iteration-by-iteration, prints 
+the results to a file `output.txt`, and then prints an analysis of the data to a table in standard
+output.
 
 #### Usage:
 ```
@@ -82,31 +88,45 @@ java PiAlgorithmExaminer <algorithms> <iterations> <precision> [options]
 
 #### Options:
 ```bash
-# TODO coming soon
+--skip_tests (-s)  # Skip running the tests (only use to re-analyze already generated output data).
+--print_table (-p) # Print the analysis as a table (defaults to printing results in a "key: value" format, which is more useful for large datasets).
 ```
 
 #### Examples:
 ```bash
-java PiAlgorithmExaminer CHUDNOVSKY,BRENT_SALAMIN 1000 20000
-java PiAlgorithmExaminer 1,2,3,4,5,6,7 10 2000 --print_table
+java PiAlgorithmExaminer CHUDNOVSKY,BRENT_SALAMIN 1000 2000
+java PiAlgorithmExaminer 1,2,3,4,5,6,7 10 2000 --print_table # <----- outputs results shown below
 ```
+Note that some algorithms are far slower to compute than others.  For example, Viete's formula
+computes a square root for every iteration, and is thus comparatively slower than other algorithms.
 
 ### Example Results:
-Here's a comparison of the first 10 iterations of all 7 implemented algorithms.  The values show 
-the number of accurate leading digits of pi per iteration.
+Here's an example output of the program showing a comparison of the first 10 iterations of all 
+7 implemented algorithms.  The first section shows the arguments passed to `ComputePi`
+(with the runtime and memory usage info), and the second section shows a table with the number
+of accurate leading digits of pi per iteration.
 
-| ITERATIONS | GREGORY_LEIBNIZ | NILAKANTHA | NEWTON | VIETE | WALLIS | CHUDNOVSKY | BRENT_SALAMIN |
-| ---------- | --------------- | ---------- | ------ | ----- | ------ | ---------- | ------------- |
-|          1 |               0 |          2 |      1 |     0 |      0 |         14 |             0 |
-|          2 |               1 |          2 |      3 |     1 |      0 |         28 |             3 |
-|          3 |               0 |          3 |      3 |     2 |      0 |         42 |             8 |
-|          4 |               1 |          2 |      4 |     2 |      0 |         56 |            19 |
-|          5 |               0 |          3 |      4 |     3 |      1 |         70 |            41 |
-|          6 |               1 |          3 |      6 |     4 |      1 |         85 |            84 |
-|          7 |               1 |          3 |      6 |     5 |      1 |         99 |           171 |
-|          8 |               1 |          4 |      7 |     5 |      1 |        113 |           345 |
-|          9 |               1 |          4 |      8 |     5 |      1 |        127 |           694 |
-|         10 |               1 |          4 |      9 |     6 |      1 |        142 |          1392 |
+```
+GREGORY_LEIBNIZ 10 2000 --print_steps --compare_values --estimate_memory_usage     0.103 seconds      1.640 KB
+NILAKANTHA      10 2000 --print_steps --compare_values --estimate_memory_usage     0.027 seconds      1.652 KB
+NEWTON          10 2000 --print_steps --compare_values --estimate_memory_usage     0.096 seconds      3.263 KB
+VIETE           10 2000 --print_steps --compare_values --estimate_memory_usage     0.395 seconds     10.548 KB
+WALLIS          10 2000 --print_steps --compare_values --estimate_memory_usage     0.017 seconds      1.647 KB
+CHUDNOVSKY      10 2000 --print_steps --compare_values --estimate_memory_usage     0.133 seconds     13.305 KB
+BRENT_SALAMIN   10 2000 --print_steps --compare_values --estimate_memory_usage     0.331 seconds     11.368 KB
+
+ITERATIONS GREGORY_LEIBNIZ NILAKANTHA NEWTON VIETE WALLIS CHUDNOVSKY BRENT_SALAMIN 
+         1               0          2      1     0      0         14             0 
+         2               1          2      3     1      0         28             3 
+         3               0          3      3     2      0         42             8 
+         4               1          2      4     2      0         56            19 
+         5               0          3      4     3      1         70            41 
+         6               1          3      6     4      1         85            84 
+         7               1          3      6     5      1         99           171 
+         8               1          4      7     5      1        113           345 
+         9               1          4      8     5      1        127           694 
+        10               1          4      9     6      1        142          1392 
+```
 
 [1]:https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80
 [2]:https://en.wikipedia.org/wiki/Pi#Infinite_series
