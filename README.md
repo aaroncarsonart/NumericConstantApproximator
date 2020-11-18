@@ -1,6 +1,6 @@
 # NumericConstantApproximator
 Approximate numeric constants such as [Pi (3.1415926...)][8] and [Phi (1.6180339...)][9] to
-arbitrary precision using java's [BigDecimal][11] class (and analyze the results).
+arbitrary precision using Java's [BigDecimal][11] class (and analyze the results).
 
 ### Compile
 ```
