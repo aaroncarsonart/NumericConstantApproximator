@@ -13,15 +13,15 @@ import java.util.Objects;
 
 /**
  * {@link ComputePi} contains various algorithms for approximating the digits of pi,
- * utilizing java's {@link BigDecimal} datatype for high-precision calculations.
+ * utilizing Java's {@link BigDecimal} datatype for high-precision calculations.
+ * <p>
+ * Requires a minimum of Java 14 for use of switch expressions.
  */
 public class ComputePi {
-
-    public static final String X_PRINT_STEPS = "--print_steps";
-    public static final String X_COMPARE_VALUES = "--compare_values";
-    public static final String X_ALL_DIGITS = "--all_digits";
+    public static final String X_PRINT_STEPS           = "--print_steps";
+    public static final String X_COMPARE_VALUES        = "--compare_values";
+    public static final String X_ALL_DIGITS            = "--all_digits";
     public static final String X_ESTIMATE_MEMORY_USAGE = "--estimate_memory_usage";
-    public static final String X_DEBUG_FLAGS = "--debug_flags";
 
     public static final String GREGORY_LEIBNIZ = "1";
     public static final String NILAKANTHA      = "2";
@@ -204,12 +204,14 @@ public class ComputePi {
 
     /**
      * Calculate an approximation of pi using the following infinite series:
-     * 1 - 1/3 + 1/5 - 1/7 + 1/9 ...
+     * <pre>pi/4 = 1 - 1/3 + 1/5 - 1/7 + 1/9 ...</pre>
      *
      * See <a href="https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80">Wikipedia</a>
      * for more details.
      *
-     * @param iterations the number of iterations.
+     * @param iterations The number of iterations.
+     * @param precision The amount of precision.
+     * @param flags The set of boolean flags to alter behavior.
      * @return The approximation of pi.
      */
     public static BigDecimal gregoryLeibnizSeries(BigDecimal iterations, int precision, Flags flags) {
@@ -310,16 +312,19 @@ public class ComputePi {
 
     /**
      * Calculate an approximation of pi using the following infinite series:
-     * pi = 3 + 4/(2*3*4) + 4/(4*5*6) + 4/(6*7*8) + 4/(8*9*10) ...
+     * <pre>pi = 3 + 4/(2*3*4) - 4/(4*5*6) + 4/(6*7*8) - 4/(8*9*10) ...</pre>
      *
      * See <a href="https://en.wikipedia.org/wiki/Pi#Infinite_series">Wikipedia</a>
      * for more details.
-     * @param iterations the number of iterations.
+     *
+     * @param iterations The number of iterations.
+     * @param precision The amount of precision.
+     * @param flags The set of boolean flags to alter behavior.
      * @return The approximation of pi.
      */
     public static BigDecimal nilakanthaSeries(BigDecimal iterations, int precision, Flags flags) {
         System.out.println("Calculating an approximation of pi using the Nilakantha series:");
-        System.out.println("pi = 3 + 4/(2*3*4) + 4/(4*5*6) + 4/(6*7*8) + 4/(8*9*10) ...");
+        System.out.println("pi = 3 + 4/(2*3*4) - 4/(4*5*6) + 4/(6*7*8) - 4/(8*9*10) ...");
 
         MathContext context = new MathContext(precision, RoundingMode.HALF_UP);
 
@@ -383,18 +388,24 @@ public class ComputePi {
                     numerator, denominator, result, prevResult, iteration);
 
             String memoryUsageString = formatMemoryUsage(memoryUsageBytes);
-            System.out.println("Memory usage: " + memoryUsageString);        }
+            System.out.println("Memory usage: " + memoryUsageString);
+        }
         return result;
     }
 
     /**
      * Calculate an approximation of pi using the infinite series used by Issac Newton.
      * See <a href="https://www.dropbox.com/s/jndc4y12f2zhnt4/Derivation%20of%20Newton's%20Sum.pdf">
-     *  paper</a> explaining the series and its derivation.
-     *
+     * paper</a> explaining the series and its derivation.
+     * <p>
      * See Matt Parker demonstrate using this sum to calculate pi by hand on the
      * <a href="https://www.youtube.com/watch?v=CKl1B8y4qXw">Standup Maths</a>
      * YouTube channel.
+     *
+     * @param iterations The number of iterations.
+     * @param precision The amount of precision.
+     * @param flags The set of boolean flags to alter behavior.
+     * @return The approximation of pi.
      */
     public static BigDecimal newtonMethod(BigDecimal iterations, int precision, Flags flags) {
         System.out.println("Calculating an approximation of pi using Issac Newton's method:");
@@ -462,9 +473,9 @@ public class ComputePi {
      * See <a href="https://en.wikipedia.org/wiki/Viète%27s_formula">Wikipedia</a>
      * for more details.
      *
-     * @param iterations the number of iterations.
-     * @param precision the amount of precision.
-     * @param flags set of boolean flags to alter behavior.
+     * @param iterations The number of iterations.
+     * @param precision The amount of precision.
+     * @param flags The set of boolean flags to alter behavior.
      * @return The approximation of pi.
      */
     public static BigDecimal vieteFormula(BigDecimal iterations, int precision, Flags flags) {
@@ -529,9 +540,9 @@ public class ComputePi {
      * See <a href="https://en.wikipedia.org/wiki/Wallis_product">Wikipedia</a>
      * for more details.
      *
-     * @param iterations the number of iterations.
-     * @param precision the amount of precision.
-     * @param flags set of boolean flags to alter behavior.
+     * @param iterations The number of iterations.
+     * @param precision The amount of precision.
+     * @param flags The set of boolean flags to alter behavior.
      * @return The approximation of pi.
      */
     public static BigDecimal wallisProduct(BigDecimal iterations, int precision, Flags flags) {
@@ -595,9 +606,9 @@ public class ComputePi {
      * See <a href="https://en.wikipedia.org/wiki/Chudnovsky_algorithm">Wikipedia</a>
      * for more details.
      *
-     * @param iterations the number of iterations.
-     * @param precision the amount of precision.
-     * @param flags set of boolean flags to alter behavior.
+     * @param iterations The number of iterations.
+     * @param precision The amount of precision.
+     * @param flags The set of boolean flags to alter behavior.
      * @return The approximation of pi.
      */
     public static BigDecimal chudnovskyAlgorithm(BigDecimal iterations, int precision, Flags flags) {
@@ -624,7 +635,7 @@ public class ComputePi {
         BigDecimal k_nPlusOne = null;
 
         BigDecimal l_addend = new BigDecimal("545140134");
-        BigDecimal x_multiplier = new BigDecimal("-262537412640768000");
+        BigDecimal x_multiplicand = new BigDecimal("-262537412640768000");
 
         BigDecimal numerator = null;
         BigDecimal denominator = null;
@@ -656,7 +667,7 @@ public class ComputePi {
                 break;
             }
             l_nPlusOne = l.add(l_addend);
-            x_nPlusOne = x.multiply(x_multiplier);
+            x_nPlusOne = x.multiply(x_multiplicand);
             k_nPlusOne = k.add(twelve);
 
             BigDecimal multNumerator = k.pow(3).subtract(sixteen.multiply(k));
@@ -673,7 +684,7 @@ public class ComputePi {
         }
         if (flags.estimateMemoryUsage) {
             int memoryUsageBytes = estimateMemoryUsage(zero, one, twelve, sixteen, c, l, x, m, k,
-                    l_nPlusOne, x_nPlusOne, m_nPlusOne, k_nPlusOne, l_addend, x_multiplier,
+                    l_nPlusOne, x_nPlusOne, m_nPlusOne, k_nPlusOne, l_addend, x_multiplicand,
                     numerator, denominator, sum, result, prevResult, iteration);
 
             String memoryUsageString = formatMemoryUsage(memoryUsageBytes);
@@ -687,7 +698,9 @@ public class ComputePi {
      * See <a href="https://en.wikipedia.org/wiki/Gauss–Legendre_algorithm">Wikipedia</a>
      * for more details.
      *
-     * @param iterations the number of iterations.
+     * @param iterations The number of iterations.
+     * @param precision The amount of precision.
+     * @param flags The set of boolean flags to alter behavior.
      * @return The approximation of pi.
      */
     public static BigDecimal brentSalaminFormula(BigDecimal iterations, int precision, Flags flags) {
@@ -712,8 +725,8 @@ public class ComputePi {
         BigDecimal t_nPlusOne = null;
         BigDecimal p_nPlusOne = null;
 
-        BigDecimal numerator = one;
-        BigDecimal denominator = one;
+        BigDecimal numerator = null;
+        BigDecimal denominator = null;
         BigDecimal result = null;
         BigDecimal prevResult = null;
         BigDecimal iteration = null;
@@ -788,7 +801,7 @@ public class ComputePi {
         System.out.println("Optional argument(s) details:");
         System.out.println("The following arguments can be used to change the program behavior:");
         System.out.println(X_ALL_DIGITS + " - (-a) Output the approximation to the fully calculated precision.");
-        System.out.println("            " + "  (Default behavior is to print only the accurate digits.)");
+        System.out.println("             " + "  (Default behavior is to print only the accurate digits.)");
         System.out.println(X_PRINT_STEPS + " -  (-p) print the approximation at each iteration of the algorithm.");
         System.out.println(X_COMPARE_VALUES + " - (-c) Compare the current and previous approximations,");
         System.out.println("                " + "   and terminate calculations early if they are equivalent.");
@@ -811,8 +824,8 @@ public class ComputePi {
      *             <li>--compare_values (-c)</li>
      *             <li>--estimate_memory_usage (-e)</li>
      *             </ul>
-     *             (See {@link #printHelpInfo} implementation for more info
-     *             on what the optional arguments do.)
+     *             (See {@link #printHelpInfo()} implementation for
+     *             more info on what the optional arguments do.)
      */
     public static void computePi(String... args) {
         long time = System.currentTimeMillis();
@@ -834,7 +847,7 @@ public class ComputePi {
         String algorithm = args[0].toUpperCase().replace("-", "_");
         String iterationsStr = args[1];
         String precisionStr = args[2];
-        if (!ComputePi.isPositiveBigDecimal(iterationsStr)) {
+        if (!ComputePi.isPositiveBigInteger(iterationsStr)) {
             System.out.println("Error: 2nd argument \"" + iterationsStr + "\" is invalid; must be a positive integer.");
             System.out.println();
             printHelpInfo();
@@ -861,7 +874,6 @@ public class ComputePi {
         boolean compareValues = false;
         boolean allDigits = false;
         boolean estimateMemoryUsage = false;
-        boolean debugFlags = false;
 
         String unknownArg = null;
 
@@ -869,7 +881,6 @@ public class ComputePi {
         int ci = 0;
         int ai = 0;
         int ei = 0;
-        int di = 0;
         for (int i = requiredArgsLength; i < args.length; i++) {
             String arg = args[i];
             if (arg.equals(X_PRINT_STEPS)) {
@@ -884,10 +895,7 @@ public class ComputePi {
             } else if (arg.equals(X_ESTIMATE_MEMORY_USAGE)) {
                 estimateMemoryUsage = true;
                 ei++;
-            } else if (arg.equals(X_DEBUG_FLAGS)) {
-                debugFlags = true;
-                di++;
-            } else if (arg.matches("-[pcade]{1,5}")) {
+            } else if (arg.matches("-[pcae]{1,4}")) {
                 String[] options = arg.substring(1).split("");
                 for (String option : options) {
                     if (option.equals("p")) {
@@ -902,52 +910,27 @@ public class ComputePi {
                     } else if (option.equals("e")) {
                         estimateMemoryUsage = true;
                         ei++;
-                    } else if (option.equals("d")) {
-                        debugFlags = true;
-                        di++;
                     }
                 }
             } else {
                 unknownArg = arg;
+                break;
             }
         }
-        boolean duplicateArgs = pi > 1 || ci > 1 || ai > 1 || ei > 1 || di > 1;
+        boolean duplicateArgs = pi > 1 || ci > 1 || ai > 1 || ei > 1;
         if (duplicateArgs || unknownArg != null) {
             if (duplicateArgs) {
-                System.out.println("Duplicate arguments found. Please only pass each argument once.");
+                System.out.println("Error: duplicate arguments found. Please only pass each argument once.");
                 System.out.println();
             }
-            else if (unknownArg != null) {
-                System.out.println("Unknown argument \"" + unknownArg + "\".");
+            if (unknownArg != null) {
+                System.out.println("Error: unknown argument \"" + unknownArg + "\".");
                 System.out.println();
             }
             printHelpInfo();
             return;
         }
         Flags flags = new Flags(printSteps, compareValues, allDigits, estimateMemoryUsage);
-
-        // print flags if requested
-        if (debugFlags) {
-            System.out.println("Optional flags:");
-            String indent = "    ";
-            if (flags.allDigits) {
-                System.out.print(indent);
-                System.out.println(X_ALL_DIGITS);
-            }
-            if (flags.compareValues) {
-                System.out.print(indent);
-                System.out.println(X_COMPARE_VALUES);
-            }
-            if (flags.estimateMemoryUsage) {
-                System.out.print(indent);
-                System.out.println(X_ESTIMATE_MEMORY_USAGE);
-            }
-            if (flags.printSteps) {
-                System.out.print(indent);
-                System.out.println(X_PRINT_STEPS);
-            }
-            System.out.println();
-        }
 
         // -------------
         // run algorithm
@@ -1018,7 +1001,7 @@ public class ComputePi {
                 }
             }
             // subtract  the '.' character
-            accurateDigits = i - 1;
+            accurateDigits = Math.max(i - 1, 0);
             System.out.println();
             System.out.println("Approximation accurate to " + accurateDigits + " digits:");
             if (!flags.allDigits) {

@@ -7,7 +7,9 @@ import java.nio.charset.Charset;
 
 /**
  * Compare the approximations, runtimes, and memory usage of pi iteration-by-iteration of
- * various algorithms implemented by {@code ComputePi}, and prints the results to a table.
+ * various algorithms implemented by {@code ComputePi}, and print the results to a table.
+ * <p>
+ * Requires a minimum of Java 14 for use of switch expressions.
  */
 public class PiAlgorithmExaminer {
     static final String X_SKIP_TESTS = "--skip_tests";
@@ -49,17 +51,15 @@ public class PiAlgorithmExaminer {
      * Run the tests of the specified algorithms with the input parameters.
      * @param args Expects 3 required arguments:
      *             <ol>
-     *                 <li>
-     *                     A comma-separated list of algorithms to compare,
-     *                     either numbers or algorithm names.
-     *                 </li>
-     *                 <li>The number of iterations to run.</li>
-     *                 <li>The precision to use in calculations.</li>
+     *             <li>A comma-separated list of algorithms to compare,
+     *             either numbers or algorithm names.</li>
+     *             <li>The number of iterations to run.</li>
+     *             <li>The precision to use in calculations.</li>
      *             </ol>
      *             Also accepts the following optional arguments:
      *             <ul>
-     *                 <li>--skip_tests (-s)</li>
-     *                 <li>--print_table (-p)</li>
+     *             <li>--skip_tests (-s)</li>
+     *             <li>--print_table (-p)</li>
      *             </ul>
      *             (See {@link #printHelpInfo} implementation for more info
      *             on what the optional arguments do.)
@@ -90,14 +90,19 @@ public class PiAlgorithmExaminer {
         String iterationsStr = args[1];
         String precisionStr = args[2];
 
-        if (!ComputePi.isPositiveBigInteger(iterationsStr)) {
-            System.out.println("2nd argument \"" + iterationsStr + "\" is invalid; must be a positive integer.");
+        if (!ComputePi.isPositiveInteger(iterationsStr)) {
+            if (ComputePi.isPositiveBigInteger(iterationsStr)) {
+                System.out.println("2nd argument \"" + iterationsStr + "\" is invalid; must be a positive integer" +
+                        " between 1 and " + Integer.MAX_VALUE + " (inclusive).");
+            } else {
+                System.out.println("2nd argument \"" + iterationsStr + "\" is invalid; must be a positive integer.");
+            }
             System.out.println();
             printHelpInfo();
             return;
         }
         if (!ComputePi.isPositiveInteger(precisionStr)) {
-            if (ComputePi.isPositiveBigInteger(iterationsStr)) {
+            if (ComputePi.isPositiveBigInteger(precisionStr)) {
                 System.out.println("3rd argument \"" + precisionStr + "\" is invalid; must be a positive integer" +
                         " between 1 and " + Integer.MAX_VALUE + " (inclusive).");
             } else {
@@ -120,7 +125,7 @@ public class PiAlgorithmExaminer {
 
         int ri = 0;
         int pi = 0;
-        for (int i = requiredArgsLength; i < args.length && unknownArg == null; i++) {
+        for (int i = requiredArgsLength; i < args.length; i++) {
             String arg = args[i];
             if (arg.equals(X_SKIP_TESTS)) {
                 runTests = false;
@@ -141,6 +146,7 @@ public class PiAlgorithmExaminer {
                 }
             } else {
                 unknownArg = arg;
+                break;
             }
         }
 
@@ -150,11 +156,11 @@ public class PiAlgorithmExaminer {
         boolean duplicateArgs = ri > 1 || pi > 1;
         if (duplicateArgs || unknownArg != null) {
             if (duplicateArgs) {
-                System.out.println("Duplicate arguments found. Please only pass each argument once.");
+                System.out.println("Error: duplicate arguments found. Please only pass each argument once.");
                 System.out.println();
             }
-            else if (unknownArg != null) {
-                System.out.println("Unknown argument \"" + unknownArg + "\".");
+            if (unknownArg != null) {
+                System.out.println("Error: unknown argument \"" + unknownArg + "\".");
                 System.out.println();
             }
             printHelpInfo();
@@ -199,7 +205,7 @@ public class PiAlgorithmExaminer {
                 time = System.currentTimeMillis() - time;
 
                 System.setOut(out);
-                System.out.format("%10.3f seconds", time / 1000.0);
+                System.out.format(" %10.3f seconds", time / 1000.0);
 
                 // read memory usage from output file
                 printStream.flush();
@@ -221,7 +227,6 @@ public class PiAlgorithmExaminer {
         // ---------------------------------
         // collect data from the output file
         // ---------------------------------
-        encoding = Charset.defaultCharset();
         fileReader = new FileReader(fileName, encoding);
         bufferedReader = new BufferedReader(fileReader);
 
@@ -313,10 +318,10 @@ public class PiAlgorithmExaminer {
         if (printTable) {
 
             // print table header row
-            String itStr = "ITERATIONS";
-            int itFormatLen = Math.max(itStr.length(), iterationsStr.length());
+            String itHeaderStr = "ITERATIONS";
+            int itFormatLen = Math.max(itHeaderStr.length(), iterationsStr.length());
             String itFormat = "%" + itFormatLen + "s ";
-            System.out.format(itFormat, itStr);
+            System.out.format(itFormat, itHeaderStr);
 
             String[] columnFormats = new String[algorithms.length];
             for (int column = 0; column < columns; column++) {
@@ -342,19 +347,20 @@ public class PiAlgorithmExaminer {
             }
         }
 
-        // ------------------------------------
-        // print results in a key: value format
-        // ------------------------------------
+        // -----------------------------------
+        // print results in a key:value format
+        // -----------------------------------
         else {
             String itFormat = "%-" + iterationsStr.length() + "d ";
             String accuracyFormat = "%-" + precisionStr.length() + "d ";
 
             for (int row = 0; row < rows; row++) {
-                System.out.print("ITERATIONS: ");
+                System.out.print("ITERATIONS:");
                 System.out.format(itFormat, row + 1);
                 for (int column = 0; column < columns; column++) {
                     String algorithm = algorithms[column];
-                    System.out.print(algorithm + ": ");
+                    System.out.print(algorithm);
+                    System.out.print(':');
 
                     int accurateDigits = accuracyTable[column][row];
                     System.out.format(accuracyFormat, accurateDigits);
@@ -378,6 +384,7 @@ public class PiAlgorithmExaminer {
 //            testAlgorithms("1,2,3,5,6,7 10 100".split("\\s+"));
 
 //            testAlgorithms("1,2,3,4,5,6,7 10 2000 -p".split("\\s+"));
+//            testAlgorithms("1,2,3,4,5,6,7 10 2000".split("\\s+"));
 
             testAlgorithms(args);
         } catch (IOException e) {

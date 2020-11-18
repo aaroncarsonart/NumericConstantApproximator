@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 
 /**
  * Compute phi (the Golden Ratio) using a Fibonacci-like series based on
- * an initial pair of input values.
+ * an initial pair of input values, utilizing Java's {@link BigDecimal}
+ * datatype for high-precision calculations.
+ * <p>
+ * Requires a minimum of Java 14 for use of switch expressions
  */
 public class ComputePhi {
-    public static final String X_PRINT_STEPS = "--print_steps";
+    public static final String X_PRINT_STEPS    = "--print_steps";
     public static final String X_COMPARE_VALUES = "--compare_values";
-    public static final String X_ALL_DIGITS = "--all_digits";
+    public static final String X_ALL_DIGITS     = "--all_digits";
     public static final int ACCURACY_UNSET = 0;
     public static final int ACCURACY_EXACT = -1;
 
@@ -23,7 +26,7 @@ public class ComputePhi {
         System.out.println("Notes:");
         System.out.println("Use --print_steps (-p) to print the approximation for each iteration of the algorithm.");
         System.out.println("Use --compare_values (-c) to compare successive approximations, terminating early when equal.");
-        System.out.println("Use --all_digits (-d_ to print all computed digits. (Default prints only accurate digits.)");
+        System.out.println("Use --all_digits (-d) to print all computed digits. (Default prints only accurate digits.)");
         System.out.println();
     }
 
@@ -40,9 +43,11 @@ public class ComputePhi {
      *             <ul>
      *             <li>--print_steps (-p)</li>
      *             <li>--compare_values (-c)</li>
-     *             <li></li>
+     *             <li>--all_digits (-d)</li>
      *             </ul>
-     * @return
+     *             (See {@link #printHelpInfo()} implementation for
+     *             more info on what the optional arguments do.
+     * @return The approximation of Phi, as a String.
      */
     public static String computePhi(String... args) {
         long time = System.currentTimeMillis();
@@ -131,7 +136,9 @@ public class ComputePhi {
         long iterations = Long.parseLong(iterationsStr);
         int precision = Integer.parseInt(precisionStr);
 
-        // calculate optional flags
+        // ------------------------
+        // parse optional arguments
+        // ------------------------
         boolean printSteps = false;
         boolean compareValues = false;
         boolean allDigits = false;
@@ -145,10 +152,13 @@ public class ComputePhi {
             String arg = args[i];
             if (arg.equals(X_PRINT_STEPS)) {
                 printSteps = true;
+                pi++;
             } else if (arg.equals(X_COMPARE_VALUES)) {
                 compareValues = true;
+                ci++;
             } else if (arg.equals(X_ALL_DIGITS)) {
                 allDigits = true;
+                ai++;
             } else if (arg.matches("-[pca]{1,3}")) {
                 String[] options = arg.substring(1).split("");
                 for (String option : options) {
@@ -172,18 +182,18 @@ public class ComputePhi {
         boolean duplicateArgs = pi > 1 || ci > 1 || ai > 1;
         if (duplicateArgs || unknownArg != null) {
             if (duplicateArgs) {
-                System.out.println("Duplicate arguments found. Please only pass each argument once.");
+                System.out.println("Error: duplicate arguments found. Please only pass each argument once.");
                 System.out.println();
             }
-            else if (unknownArg != null) {
-                System.out.println("Unknown argument \"" + unknownArg + "\".");
+            if (unknownArg != null) {
+                System.out.println("Error: unknown argument \"" + unknownArg + "\".");
                 System.out.println();
             }
             printHelpInfo();
             return null;
         }
 
-        int nFormatLength = args[2].length();
+        int nFormatLength = iterationsStr.length();
         String nFormatStr = "%" + nFormatLength + "s: ";
 
         MathContext context = new MathContext(precision, RoundingMode.HALF_UP);
@@ -244,7 +254,7 @@ public class ComputePhi {
         }
 
         System.out.println();
-        System.out.println("Approximation accurate to " + accurateDigits + " digits:"); // remove the '.' character
+        System.out.println("Approximation accurate to " + accurateDigits + " digits:");
         System.out.println(approxStr);
 
         // print a marker for the last accurate digit
