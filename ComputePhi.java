@@ -271,9 +271,8 @@ public class ComputePhi {
 
 //        String result = computePhi("1 1 40 15 --print_steps".split("\\s+"));
 //        String result = computePhi("2 1 40 15 --print_steps".split("\\s+"));
+//        String result = computePhi("1 1 20 15".split("\\s+"));
 
-        String result = computePhi(("1 1 20 15").split("\\s+"));
-
-//         String result = computePhi(args);
+         String result = computePhi(args);
     }
 }
