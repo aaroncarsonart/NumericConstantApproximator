@@ -17,7 +17,7 @@ public class PiAlgorithmExaminer {
      * Prints the CLI usage info.
      */
     public static void printHelpInfo() {
-        System.out.println("Usage: java AlgorithmExaminer <algorithms> <iterations> <precision> [options]");
+        System.out.println("Usage: java PiAlgorithmExaminer <algorithms> <iterations> <precision> [options]");
         System.out.println("Runs a battery of tests, stores results in output.txt, and then analyzes the results.");
         System.out.println();
         System.out.println("1st argument details:");
