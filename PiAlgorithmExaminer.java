@@ -43,7 +43,7 @@ public class PiAlgorithmExaminer {
         System.out.println("            " + "   Assumes output.txt matches {iterations} and {precision}.");
         System.out.println("            " + "   (Default behavior always runs the tests and overrites output.txt.)");
         System.out.println(X_PRINT_TABLE + " - (-p) Print the analysis formatted in a table.");
-        System.out.println("             " + "   (Default behavior prints rows in a key: value format");
+        System.out.println("             " + "   (Default behavior prints rows in a key:value format");
         System.out.println();
     }
 
