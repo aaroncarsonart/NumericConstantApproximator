@@ -3,6 +3,7 @@ Approximate numeric constants such as [Pi (3.1415926...)][8] and [Phi (1.6180339
 arbitrary precision using Java's [BigDecimal][11] class (and analyze the results).
 
 ### Compile
+_Note: this project requires a minimum of Java 14 to run.  [Java 15][12] is recommended as it is the most recent version as of the writing of this documentation._
 ```
 javac ComputePhi.java ComputePi.java PiAlgorithmExaminer.java
 ```
@@ -140,3 +141,4 @@ BRENT_SALAMIN   10 2000 --print_steps --compare_values --estimate_memory_usage  
 [9]:https://en.wikipedia.org/wiki/Phi
 [10]:https://www.angio.net/pi/digits.html
 [11]:https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/math/BigDecimal.html
+[12]:https://www.oracle.com/java/technologies/javase-downloads.html
