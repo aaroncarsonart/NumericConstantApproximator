@@ -2,7 +2,10 @@
 Approximate numeric constants such as [Pi (3.1415926...)][8] and [Phi (1.6180339...)][9] to
 arbitrary precision using Java's [BigDecimal][11] class (and analyze the results).
 
-### Compile
+## License
+This project is licensed under the [MIT license](LICENSE.txt).
+
+## Compile
 _Note: this project requires a minimum of Java 14 to run.  [Java 15][12] is recommended as it is the most recent version as of the writing of this documentation._
 ```
 javac ComputePhi.java ComputePi.java PiAlgorithmExaminer.java
@@ -61,10 +64,10 @@ java ComputePi <algorithm> <iterations> <precision> [options]
 
 #### Options:
 ```
---all_digits (-a)       # Print all digits (default only prints accurate digits).
---print_steps (-p)      # Print approximation for each iteration of algorithm.
---compare_values (-c)   # Compare sequential iterations' results, and stop iterating early if they are equal.
---estimate_memory_usage # Print an estimate of memory usage.
+--all_digits (-a)            # Print all digits (default only prints accurate digits).
+--print_steps (-p)           # Print approximation for each iteration of algorithm.
+--compare_values (-c)        # Compare sequential iterations' results, and stop iterating early if they are equal.
+--estimate_memory_usage (-e) # Print an estimate of memory usage.
 ```
 
 #### Examples:
